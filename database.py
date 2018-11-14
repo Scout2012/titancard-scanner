@@ -1,45 +1,70 @@
 import sqlite3
-# conn = sqlite3.connect('tcscanner.db')
-# 
-# c = conn.cursor()
-# 
-# c.execute('''CREATE TABLE person (id real, card_number real, cwid real, name text, email text)''')
-# 
-# c.execute("INSERT INTO person VALUES('1', '1234567890000', '333222111', 'Neil Breen', 'neilb4breen@gmail.com')")
-# 
-# conn.commit()
-# 
-# 
-# for row in c.execute('SELECT * FROM person ORDER BY id'):
-#     print(row)
-# 
-# conn.close()
 
 
-
-
-
-
-class TitanCardScanner:
-    """Local database class that holds data."""
-
-    locale = "tcscanner.db"
-
+# begin class MyDatabase()
+class MyDatabase():
+    locale = "csuf.db"
     def __init__(self):
-        """Initialize instance variables and creates connection to the database."""
-        self.conn = sqlite3.connect(TitanCardScanner.locale)
-        self.curr = self.conn.cursor()
+        self.mConnection = sqlite3.connect(MyDatabase.locale)
+
+        # for now, creates the table for the club 'acmw'
+        # more will be added
+        # self.curr = self.mConnection.cursor().execute("CREATE TABLE IF NOT EXISTS acmw(Name,TCID,CWID)")
+
+        self.curr = self.mConnection.cursor()
+
+    # the following three methods()
+    # - adds a person to the database (club specific OR all)
+    # - removes a person from a particular club OR all
+    # - checks if the person is in the database (at least in one club) using the supplied name or id
 
     def create_tables(self):
         """Create the tables if they don't exist."""
-        self.curr.execute('''CREATE TABLE person (id real, card_number real, cwid real, name text, email text)''')
+        self.curr.execute('''CREATE TABLE IF NOT EXISTS person
+        (id real, card_number real, cwid real, name text, email text)''')
 
-        self.conn.commit()
+        self.mConnection.commit()
 
-    def add_person(self, id1, card_number1, cwid1, name1, email1):
-        """Add a person to the database."""
-        self.curr.execute("INSERT INTO person (id, card_number, cwid, name, email) VALUES (?)",
-                          (id1, card_number1, cwid1, name1, email1))
-        self.conn.commit()
+    # def subscribePersonWithClub(self, person, club):
+    def subscribePerson(self, person):
+        cursor = self.mConnection.cursor()
+        if type(person) is list:
+            cursor.executemany("INSERT INTO acmw VALUES (?,?,?)", person)
+        if type(person) is tuple:
+            cursor.execute("INSERT INTO acmw VALUES (?,?,?)", person)
 
-    'name and id for checking'
+    # def unsubscribePersonFromClub:
+    def unsubscribePerson(self, name):
+        cursor = self.mConnection.cursor()
+        cursor.execute("DELETE FROM acmw WHERE Name=(?)", (name,))
+
+    def isPersonSignedUp(self, name):
+        cursor = self.mConnection.cursor()
+        cursor.execute("SELECT * FROM acmw WHERE Name=(?)", (name,))
+        data = cursor.fetchone()
+        if not data:
+            return False
+        else:
+            return True
+
+    # the following three methods()
+    # - places a 'marker' next the person to indicate the person is signed in to a particular club
+    # - removes a 'marker' next the person to indicate the person is singed out from the particular club
+    # - checks if a 'marker' is next to the person in a particular club
+    # def signPersonIn(self):
+    #     pass
+    # def signPersonOut(self):
+    #     pass
+    # def isPersonSignedIn(self):
+    #     pass
+
+    def status(self):
+        cursor = self.mConnection.cursor()
+        for row in cursor.execute("SELECT * FROM acmw"):
+            print(row)
+
+
+# end class MyDatabase()
+
+def version():
+    return 1.0
