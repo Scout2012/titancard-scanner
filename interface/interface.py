@@ -3,6 +3,12 @@ from PIL import Image
 from PIL import ImageTk
 import videostream
 
+import database
+
+#********CREATING TABLES***************
+db = database.MyDatabase()
+db.create_tables()
+
 # begin TitanCardScannerApp()
 class TitanCardScannerApp():
     # the following method initializes the main app window and connects to the camera and displays the video feed
