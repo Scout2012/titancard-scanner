@@ -1,8 +1,8 @@
-from tkinter import *
+from Tkinter import *
 from PIL import Image
 from PIL import ImageTk
 import cv2
-import interface.videostream
+from .videostream import videostream
 from recog.recog import ocrCard
 from database import database
 
@@ -13,7 +13,7 @@ class TitanCardScannerApp():
         # create a main window called "TitanCard Scanner" with dimensions 500 x 410
         self.AppWindow = Tk()
         self.AppWindow.title("TitanCard Scanner")
-        self.AppWindow.geometry('500x420')
+        self.AppWindow.geometry('500x440')
         self.AppWindow.wm_protocol("WM_DELETE_WINDOW", self.__onCloseWindow__)
 
         # create a container in the main window for the video feed to be placed in
@@ -77,7 +77,7 @@ class TitanCardScannerApp():
 
         # create variables that captures the video stream object and camera frames and display video
         self.CameraFrame = None
-        self.VideoStream = interface.videostream.videostream(0)
+        self.VideoStream = videostream(0)
         self.displayVideo()
 
         # initialize database connection
