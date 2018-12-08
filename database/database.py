@@ -4,7 +4,7 @@ import sqlite3
 class TCDB():
     # the following method initializes the tables 'acmw' and 'acmwsignin' in the database file
     def __init__(self):
-        self.mConnection = sqlite3.connect("database/csuf-tcscanner.db")
+        self.mConnection = sqlite3.connect("csuf.db")
         self.cursor = self.mConnection.cursor()
 
         self.createTableWithName("acmw")
@@ -12,7 +12,7 @@ class TCDB():
 
     # the following method adds a person into the specified club in the database file
     def subscribePersonToClub(self, person, club='acmw'):
-        dbcommand = "INSERT INTO "+club+" VALUES (?,?,?,?)"
+        dbcommand = "INSERT INTO "+club+" VALUES (?,?,?,?,?)"
         if type(person) is list:
             self.cursor.executemany(dbcommand, person)
         if type(person) is tuple:
@@ -31,11 +31,16 @@ class TCDB():
         if not data:
             return False
         else:
+            attend = data[4]
+            attend += 1
+            cwid = data[2]
+            self.cursor.execute("UPDATE acmw SET Attendance= (?) WHERE CWID=(?)", (attend, cwid))
+            self.mConnection.commit()
             return True
 
     # the following method creates a table in the database
     def createTableWithName(self, tabletitle):
-        dbcommand = "CREATE TABLE IF NOT EXISTS "+tabletitle+"(Name,TCID,CWID,Email)"
+        dbcommand = "CREATE TABLE IF NOT EXISTS "+tabletitle+"(Name,TCID,CWID,Email,Attendance)"
         self.cursor.execute(dbcommand)
         self.mConnection.commit()
 
