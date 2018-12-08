@@ -109,6 +109,10 @@ class TitanCardScannerApp():
             else:
                 self.tcdb.subscribePersonToClub(person)
                 print(person[0]+" is not subscribed to acmw")
+                
+        self.FirstNameEntryView.delete(0, len(name))
+        self.TitanCardEntryView.delete(0, len(cwid))
+        self.EmailLabelEntryView.delete(0, len(email))
 
     # the following method adds the person specified in the entry fields to the specified club
     # for now, the only club will be 'acmw'
