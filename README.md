@@ -15,7 +15,6 @@ Jacob Powell scoutdude@csu.fullerton.edu
 
 This project will use:
   * Python
-  * Javascript
   * SQL
 
 ## How to start helping
